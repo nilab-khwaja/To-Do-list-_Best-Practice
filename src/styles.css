@@ -99,3 +99,10 @@ input:checked ~ span {
 #clean-btn:hover {
   background-color: gainsboro;
 }
+
+.edit-field {
+  height: 3rem;
+  outline: none;
+  border-color: gainsboro;
+  padding: 5px;
+}

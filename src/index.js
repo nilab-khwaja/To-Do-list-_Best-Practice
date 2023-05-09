@@ -14,35 +14,35 @@ if (localStorage.getItem('to_do_list') !== null) {
   tasks = JSON.parse(localStorage.getItem('to_do_list'));
 }
 
-const UpdateStorage = () => localStorage.setItem('to_do_list', JSON.stringify(tasks));
+const updateStorage = () => localStorage.setItem('to_do_list', JSON.stringify(tasks));
 
-const UpdateIndex = (x) => {
+const updateIndex = (x) => {
   for (let i = x; i < tasks.length; i += 1) {
     tasks[i].index = i;
   }
-  UpdateStorage();
+  updateStorage();
   ShowList();
 };
 
-const EditFun = (varX) => {
-  const editArrItem = tasks.filter((item) => item.index === varX);
+const editFun = (id) => {
+  const editArrItem = tasks.filter((item) => item.index === id);
   return editArrItem[0].description;
 };
 
-const DelFun = (varX) => {
+const delFun = (varX) => {
   tasks = tasks.filter((item) => item.index !== varX);
 };
 
-const OkFun = (varX, val) => {
+const okFun = (id, val) => {
   tasks = tasks.filter((item) => {
-    if (item.index === varX) {
+    if (item.index === id) {
       item.description = val;
     }
     return true;
   });
 };
 
-const CheckFun = (varI, check) => {
+const checkFun = (varI, check) => {
   tasks[varI].completed = CheckIfCompleted(check);
 };
 
@@ -54,10 +54,7 @@ ShowList = () => {
     const span = document.createElement('span');
     const editField = document.createElement('input');
 
-    editField.style.height = '3rem';
-    editField.style.outline = 'none';
-    editField.style.borderColor = 'gainsboro';
-    editField.style.padding = '5px';
+    editField.classList.add('edit-field');
 
     const x = tasks[i].index;
     checkIcon.type = 'checkbox';
@@ -99,8 +96,8 @@ ShowList = () => {
     listContainer.appendChild(listItem);
 
     checkIcon.addEventListener('change', () => {
-      CheckFun(i, checkIcon.checked);
-      UpdateStorage();
+      checkFun(i, checkIcon.checked);
+      updateStorage();
     });
     dotsIcon.addEventListener('click', () => {
       ShowElement([checkIcon, span, delIcon, editIcon, xIcon]);
@@ -113,21 +110,21 @@ ShowList = () => {
     });
 
     editIcon.addEventListener('click', () => {
-      editField.value = EditFun(x);
+      editField.value = editFun(x);
       ShowElement([editField, okIcon, xIcon]);
       HideElement([checkIcon, span, delIcon, editIcon, dotsIcon]);
     });
 
     delIcon.addEventListener('click', () => {
       listItem.remove();
-      DelFun(x);
-      UpdateStorage();
-      UpdateIndex(x);
+      delFun(x);
+      updateStorage();
+      updateIndex(x);
     });
 
     okIcon.addEventListener('click', () => {
-      OkFun(x, editField.value);
-      UpdateStorage();
+      okFun(x, editField.value);
+      updateStorage();
       span.innerHTML = editField.value;
       ShowElement([checkIcon, span, dotsIcon]);
       HideElement([editField, delIcon, editIcon, okIcon, xIcon]);
@@ -152,7 +149,7 @@ enterIcon.addEventListener('click', () => {
     });
   }
   ShowList();
-  UpdateStorage();
+  updateStorage();
   addField.value = '';
   addField.focus();
 });
@@ -166,6 +163,6 @@ addField.addEventListener('keydown', (event) => {
 
 cleanBtn.addEventListener('click', () => {
   tasks = tasks.filter((item) => item.completed === false);
-  UpdateStorage();
-  UpdateIndex(0);
+  updateStorage();
+  updateIndex(0);
 });
